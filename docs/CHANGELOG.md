@@ -1,5 +1,6 @@
 # 1.5.4
 
+- Multi-levels selection in world view (a big thank you to JeremyFa / https://github.com/jeremyfa)
 - Added a new Project setting to customize the JSON indentation (Full, Compact or Minified)
 - The online JSON documentation now shows references between UID fields.
 - Fixed a crash when updating an external CastleDB file
