@@ -1,14 +1,6 @@
 name: test-windows
 
 on:
-  push:
-    branches:
-      - master
-      - dev*
-  pull_request:
-    branches:
-      - master
-      - dev*
   workflow_dispatch:
 
 jobs:
@@ -59,13 +51,33 @@ jobs:
       - run: haxelib git deepnightLibs https://github.com/deepnight/deepnightLibs.git --always
       - run: haxelib list
 
+      # ДОБАВЬТЕ перед haxe командами (после haxelib list):
+      - name: Фикс deepnightLibs для 1.5.3
+        run: |
+          haxelib remove deepnightLibs || true
+          haxelib git deepnightLibs https://github.com/deepnight/deepnightLibs.git 1.0.87
+
+      
+      - name: Diagnostics LocaleString
+        shell: bash
+        run: |
+          echo "=== HAXELIB LIST ==="
+          haxelib list | grep deepnightLibs
+          
+          echo "=== НАЙДЁМ LocaleString ==="
+          grep -r "LocaleString" src/electron.renderer/ || echo "НЕ НАЙДЕН В src"
+          
+          echo "=== deepnightLibs файлы ==="
+          find ~/.haxelib/deepnightLibs -name "*.hx" -exec grep -l "LocaleString" {} \; || echo "НЕТ в deepnightLibs"
+
+
       # Node/NPM commands
       - uses: actions/setup-node@v4
         with:
           node-version: '14'
       - run: cd app && npm install
-      # ЗАМЕНИТЕ БЛОК npm run compile на ЭТО (1:1 из документации):
       
+      # ЗАМЕНИТЕ БЛОК npm run compile на ЭТО (1:1 из документации):
       - name: Build LDtk (README официально)
         shell: bash
         run: |
