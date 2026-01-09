@@ -9,6 +9,7 @@ on:
     branches:
       - master
       - dev*
+  workflow_dispatch:
 
 jobs:
   build:
@@ -65,3 +66,26 @@ jobs:
       - run: cd app && npm install
       - run: cd app && npm run compile
 
+      # Build portable version
+      - name: Build LDtk Portable
+        shell: bash
+        run: |
+          cd app
+          npm run build:portable
+        env:
+          NODE_OPTIONS: "--max-old-space-size=4096"
+
+      # Create portable zip
+      - name: Package Portable LDtk
+        shell: bash
+        run: |
+          cd app/dist
+          powershell -Command "Compress-Archive -Path 'LDtk.exe', 'resources', 'node_modules' -DestinationPath '../../LDtk-windows-portable.zip' -Force"
+
+      # Upload portable build as artifact
+      - name: Upload Portable Build
+        uses: actions/upload-artifact@v3
+        with:
+          name: ldtk-windows-portable-${{ steps.branch.outputs.v }}
+          path: app/dist/LDtk-windows-portable.zip
+          retention-days: 30
