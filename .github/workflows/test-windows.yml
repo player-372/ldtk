@@ -64,7 +64,16 @@ jobs:
         with:
           node-version: '14'
       - run: cd app && npm install
-      - run: cd app && npm run compile
+      # ЗАМЕНИТЕ БЛОК npm run compile на ЭТО (1:1 из документации):
+      
+      - name: Build LDtk (README официально)
+        shell: bash
+        run: |
+          haxe main.debug.hxml
+          
+          mkdir -p app/assets/js
+          haxe renderer.debug.hxml
+
 
       # Build portable version
       - name: Build LDtk Portable
