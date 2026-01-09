@@ -7,7 +7,7 @@
 	"description": "2D level editor",
 	"scripts": {
 		"start": "electron .",
-		"compile": "cd ..  &&  haxe main.hxml  &&  haxe renderer.hxml",
+		"compile": "cd ..  &&  haxe main.debug.hxml  &&  haxe renderer.debug.hxml",
 		"doc": "cd ..  &&  haxe doc.hxml",
 		"pack-prepare": "npm run doc  &&  npm run compile",
 		"pack-test": "npm run pack-prepare  &&  electron-builder build --win --dir --publish never",
