@@ -107,12 +107,13 @@ jobs:
           find . -name "LDtk*.exe" || echo "НЕТ LDtk.exe"
 
 
-      # Create portable zip
-      - name: Package Portable LDtk
+      - name: Package Portable LDtk (ФИНАЛЬНО)
         shell: bash
         run: |
-          cd app/dist
-          powershell -Command "Compress-Archive -Path 'LDtk.exe', 'resources', 'node_modules' -DestinationPath '../../LDtk-windows-portable.zip' -Force"
+          cd app/redist/win-unpacked
+          powershell -Command "
+            Compress-Archive -Path 'LDtk.exe', '../../resources', '../../node_modules' -DestinationPath '../../../LDtk-windows-portable.zip' -Force
+          "
 
       # Upload portable build as artifact
       - name: Upload Portable Build
