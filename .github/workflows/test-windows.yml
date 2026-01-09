@@ -107,18 +107,26 @@ jobs:
           find . -name "LDtk*.exe" || echo "НЕТ LDtk.exe"
 
 
-      - name: Package Portable LDtk (ФИНАЛЬНО)
+      - name: Package Portable LDtk (ПРОСТО)
         shell: bash
         run: |
-          cd app/redist/win-unpacked
-          powershell -Command "
-            Compress-Archive -Path 'LDtk.exe', '../../resources', '../../node_modules' -DestinationPath '../../../LDtk-windows-portable.zip' -Force
-          "
 
-      # Upload portable build as artifact
+          mkdir -p portable
+          cp app/redist/win-unpacked/LDtk.exe portable/
+          
+
+          cp -r resources portable/ || true
+          cp -r app/node_modules portable/node_modules || true
+          
+
+          cd portable
+          powershell -Command "Compress-Archive -Path * -DestinationPath '../LDtk-windows-portable.zip' -Force"
+
+
       - name: Upload Portable Build
         uses: actions/upload-artifact@v4
         with:
           name: ldtk-windows-portable-${{ steps.branch.outputs.v }}
-          path: app/dist/LDtk-windows-portable.zip
+          path: LDtk-windows-portable.zip  # ← правильно (в корне)
           retention-days: 30
+
